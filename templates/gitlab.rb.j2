@@ -69,6 +69,7 @@ nginx['ssl_client_certificate'] = "{{ gitlab_nginx_ssl_client_certificate }}"
 
 ## TODO: fix so this is automatically generated from a postgres playbook
 {% if gitlab_db_type == "postgresql" %}
+postgresql['enable'] = false
 ### GitLab database settings
 ###! Docs: https://docs.gitlab.com/omnibus/settings/database.html
 ###! **Only needed if you use an external database.**
@@ -82,14 +83,15 @@ gitlab_rails['db_port'] = {{ gitlab_db_port }}
 {% endif %}
 
 ## TODO: fix so this is automatically generated from a redis playbook
-{% if gitlab_redis %}
+{% if gitlab_redis == "true" %}
+redis['enable'] = false
 #### Redis TCP connection
-gitlab_rails['redis_host'] = '{{ gitlab_redis_hostname }}'
-gitlab_rails['redis_port'] = {{ gitlab_redis_port}}
+gitlab_rails['redis_host'] = '{{ groups.gitlab_redis[0] }}'
+gitlab_rails['redis_port'] = {{ gitlab_redis_port }}
 {% endif %}
 
 ## TODO: fix so this is automatically generated from a sentinel playbook
-{% if gitlab_redis_sentinel %}
+{% if gitlab_redis_sentinel == "true" %}
 #### Sentinel support
 ####! To have Sentinel working, you must enable Redis TCP connection support
 ####! above and define a few Sentinel hosts below (to get a reliable setup
@@ -98,10 +100,15 @@ gitlab_rails['redis_port'] = {{ gitlab_redis_port}}
 ####!   not be used in a fail-over situation to query for the new master.**
 redis['master_name'] = '{{ gitlab_redis_sentinel_master_name }}'
 gitlab_rails['redis_sentinels'] = [
-  {'host' => '10.127.35.10', 'port' => 26379},
-  {'host' => '10.127.35.11', 'port' => 26379},
-  {'host' => '10.127.35.12', 'port' => 26379},
+{% for sentinel in gitlab_redis_sentinel_hosts %}
+  {'host' => '{{ sentinel.host }}', 'port' => {{ sentinel.port }}},
+{% endfor %}
 ]
+{% endif %}
+
+# Gitlab High Availability
+{% if gitlab_high_availability == "true" %}
+high_availability['mountpoint'] = '{{ gitlab_high_availability_mountpoint }}'
 {% endif %}
 
 # To change other settings, see:

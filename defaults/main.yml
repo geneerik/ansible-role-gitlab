@@ -56,3 +56,27 @@ gitlab_email_enabled: "false"
 gitlab_email_from: "gitlab@example.com"
 gitlab_email_display_name: "Gitlab"
 gitlab_email_reply_to: "gitlab@example.com"
+
+# Redis Configuration
+# To activate redis configuration set the gitlab_redis variable to true
+gitlab_redis: false
+gitlab_redis_port: ""
+
+# Redis Sentinel Configuration
+# gitlab_redis_sentinel needs to be set to activate sentinel configurations
+gitlab_redis_sentinel: false
+
+# gitlab_redis_sentinel_master_name should be set to the group name of redis sentinel. https://redis.io/topics/sentinel for more information
+gitlab_redis_sentinel_master_name: "mymaster"
+
+# The redis sentinel hosts configuration should be in the following format
+#gitlab_redis_sentinel_hosts:
+#  - { host: "<ip of first host>", port: <redis sentinel port> }
+#  - { host: "<ip of second host>", port: <redis sentinel port> }
+
+# Gitlab High Availability
+# Enable to configure high availability
+gitlab_high_availability: false
+
+# A network mounted mountpoint for the data directory needs to be set
+# gitlab_high_availability_mountpoint: '/var/opt/gitlab/git-data'

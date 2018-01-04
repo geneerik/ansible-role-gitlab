@@ -57,6 +57,14 @@ gitlab_email_from: "gitlab@example.com"
 gitlab_email_display_name: "Gitlab"
 gitlab_email_reply_to: "gitlab@example.com"
 
+# PostgreSQL configuration
+gitlab_db_external: "false"
+gitlab_db_name: ""
+gitlab_db_username: ""
+gitlab_db_password: ""
+gitlab_db_hostname: ""
+gitlab_db_port: "5432"
+
 # Redis Configuration
 # To activate redis configuration set the gitlab_redis variable to true
 gitlab_redis: false

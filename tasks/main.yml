@@ -19,6 +19,7 @@
     - curl
     - openssl
     - tzdata
+  become: true
 
 - name: Download GitLab repository installation script.
   get_url:
@@ -30,6 +31,7 @@
 - name: Install GitLab repository
   command: bash /tmp/gitlab_install_repository.sh
   when: (gitlab_file.stat.exists == false)
+  become: true
 
 - name: Define the Gitlab package name.
   set_fact:
@@ -41,6 +43,7 @@
     name: "{{ gitlab_package_name | default(gitlab_edition) }}"
     state: installed
   when: (gitlab_file.stat.exists == false)
+  become: true
 
 # Start and configure GitLab. Sometimes the first run fails, but after that,
 # restarts fix problems, so ignore failures on this run.
@@ -49,6 +52,7 @@
     gitlab-ctl reconfigure
     creates=/var/opt/gitlab/bootstrapped
   failed_when: false
+  become: true
 
 - name: Create GitLab SSL configuration folder.
   file:
@@ -58,12 +62,14 @@
     group: root
     mode: 0700
   when: gitlab_create_self_signed_cert
+  become: true
 
 - name: Create self-signed certificate.
   command: >
     openssl req -new -nodes -x509 -subj "{{ gitlab_self_signed_cert_subj }}" -days 3650 -keyout {{ gitlab_ssl_certificate_key }} -out {{ gitlab_ssl_certificate }} -extensions v3_ca
     creates={{ gitlab_ssl_certificate }}
   when: gitlab_create_self_signed_cert
+  become: true
 
 - name: Copy GitLab configuration file.
   template:
@@ -73,3 +79,4 @@
     group: root
     mode: 0600
   notify: restart gitlab
+  become: true

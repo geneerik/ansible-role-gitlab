@@ -1,0 +1,19 @@
+---
+
+- name: copy secrets file from master
+  copy:
+    src: /tmp/{{ hostvars[item[0]]['ansible_hostname'] }}/etc/gitlab/gitlab-secrets.json
+    dest: /tmp
+  with_items: groups.gitlab
+  become: true
+  register: secrets_copied
+
+- name: add skip-auto-migrations on slave
+  file:
+    path: /etc/gitlab/skip-auto-migrations
+    state: touch
+  become: true
+
+- name: Reconfigure GitLab (Secrets arrived).
+  command: gitlab-ctl reconfigure
+  when: secrets_copied

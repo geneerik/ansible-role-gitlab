@@ -1,0 +1,7 @@
+---
+
+- name: fetch secrets file from master
+  fetch:
+    src: /etc/gitlab/gitlab-secrets.json
+    dest: /tmp
+  become: true

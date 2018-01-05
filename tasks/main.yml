@@ -42,14 +42,6 @@
     state: installed
   when: (gitlab_file.stat.exists == false)
 
-# Start and configure GitLab. Sometimes the first run fails, but after that,
-# restarts fix problems, so ignore failures on this run.
-- name: Reconfigure GitLab (first run).
-  command: >
-    gitlab-ctl reconfigure
-    creates=/var/opt/gitlab/bootstrapped
-  failed_when: false
-
 - name: Create GitLab SSL configuration folder.
   file:
     path: /etc/gitlab/ssl
@@ -73,3 +65,15 @@
     group: root
     mode: 0600
   notify: restart gitlab
+
+# Start and configure GitLab. Sometimes the first run fails, but after that,
+# restarts fix problems, so ignore failures on this run.
+- name: Reconfigure GitLab (first run).
+  command: >
+    gitlab-ctl reconfigure
+    creates=/var/opt/gitlab/bootstrapped
+  failed_when: false
+
+# Include master/slave configurations
+- include: "{{ gitlabha_role }}.yml"
+  when: gitlabha_role != 'skip'

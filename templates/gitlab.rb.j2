@@ -106,8 +106,8 @@ gitlab_rails['redis_sentinels'] = [
 ]
 {% endif %}
 
-# Gitlab High Availability
 {% if gitlab_high_availability == "true" %}
+# Gitlab High Availability
 high_availability['mountpoint'] = '{{ gitlab_high_availability_mountpoint }}'
 {% endif %}
 

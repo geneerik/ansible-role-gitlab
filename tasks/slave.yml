@@ -2,9 +2,8 @@
 
 - name: copy secrets file from master
   copy:
-    src: /tmp/{{ hostvars[item[0]]['ansible_hostname'] }}/etc/gitlab/gitlab-secrets.json
+    src: /tmp/{{ groups.gitlab[0] }}/etc/gitlab/gitlab-secrets.json
     dest: /tmp
-  with_items: groups.gitlab
   become: true
   register: secrets_copied
 

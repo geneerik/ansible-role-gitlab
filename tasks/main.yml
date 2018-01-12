@@ -87,7 +87,7 @@
     name: nfs-common
     state: present
   become: true
-  when: gitlab_high_availability == "true"
+  when: gitlab_high_availability
 
 # Mount NFS shares for High Availability
 - name: Mount all nfs shares
@@ -99,7 +99,7 @@
     - { mountpoint: "/var/opt/gitlab-rails/shared", source: "{{ gitlab_nfs_host }}:/export/shared" }
     - { mountpoint: "/var/opt/gitlab-ci/builds", source: "{{ gitlab_nfs_host }}:/export/builds" }
     - { mountpoint: "/var/opt/gitlab/backups", source: "{{ gitlab_nfs_host }}:/export/backups" }
-  when: gitlab_high_availability == "true"
+  when: gitlab_high_availability
 
 
 # Include master/slave configurations

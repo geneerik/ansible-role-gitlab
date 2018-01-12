@@ -91,7 +91,7 @@
 
 # Mount NFS shares for High Availability
 - name: Mount all nfs shares
-  mount: name="{{ item.mountpoint }}" src="{{ item.source }}" fstype=nfs opts=nobootwait,rsize=8192,wsize=8192,timeo=14,intr dump=0 passno=2 state=mounted
+  mount: name="{{ item.mountpoint }}" src="{{ item.source }}" fstype=nfs opts=rsize=8192,wsize=8192,timeo=14,intr dump=0 passno=2 state=mounted
   with_items:
     - { mountpoint: "/var/opt/gitlab/git-data", source: "{{ gitlab_nfs_host }}:/export/git" }
     - { mountpoint: "/var/opt/gitlab/.ssh", source: "{{ gitlab_nfs_host }}:/export/ssh" }
@@ -99,6 +99,7 @@
     - { mountpoint: "/var/opt/gitlab-rails/shared", source: "{{ gitlab_nfs_host }}:/export/shared" }
     - { mountpoint: "/var/opt/gitlab-ci/builds", source: "{{ gitlab_nfs_host }}:/export/builds" }
     - { mountpoint: "/var/opt/gitlab/backups", source: "{{ gitlab_nfs_host }}:/export/backups" }
+  become: true
   when: gitlab_high_availability
 
 

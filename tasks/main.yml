@@ -81,6 +81,27 @@
   failed_when: false
   become: true
 
+# Make sure nfs-common is installed
+- name: Ensure NFS common is installed
+  package:
+    name: nfs-common
+    state: present
+  become: true
+  when: gitlab_high_availability == "true"
+
+# Mount NFS shares for High Availability
+- name: Mount all nfs shares
+  mount: name="{{ item.mountpoint }}" src="{{ item.source }}" fstype=nfs opts=nobootwait,rsize=8192,wsize=8192,timeo=14,intr dump=0 passno=2 state=mounted
+  with_items:
+    - { mountpoint: "/var/opt/gitlab/git-data", source: "{{ gitlab_nfs_host }}:/export/git" }
+    - { mountpoint: "/var/opt/gitlab/.ssh", source: "{{ gitlab_nfs_host }}:/export/ssh" }
+    - { mountpoint: "/var/opt/gitlab-rails/uploads", source: "{{ gitlab_nfs_host }}:/export/uploads" }
+    - { mountpoint: "/var/opt/gitlab-rails/shared", source: "{{ gitlab_nfs_host }}:/export/shared" }
+    - { mountpoint: "/var/opt/gitlab-ci/builds", source: "{{ gitlab_nfs_host }}:/export/builds" }
+    - { mountpoint: "/var/opt/gitlab/backups", source: "{{ gitlab_nfs_host }}:/export/backups" }
+  when: gitlab_high_availability == "true"
+
+
 # Include master/slave configurations
 - include: "{{ gitlabha_role }}.yml"
   when: gitlabha_role != 'skip'

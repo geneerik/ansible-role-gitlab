@@ -63,7 +63,7 @@ nginx['listen_https'] = "{{ gitlab_nginx_listen_https }}"
 gitlab_rails['smtp_enable'] = {{ gitlab_smtp_enable }}
 gitlab_rails['smtp_address'] = '{{ gitlab_smtp_address }}'
 gitlab_rails['smtp_port'] = {{ gitlab_smtp_port }}
-{% if gitlab_smtp_authentication is defined -%}
+{% if gitlab_smtp_authentication -%}
 gitlab_rails['smtp_user_name'] = '{{ gitlab_smtp_user_name }}'
 gitlab_rails['smtp_password'] = '{{ gitlab_smtp_password }}'
 gitlab_rails['smtp_authentication'] = '{{ gitlab_smtp_authentication }}'

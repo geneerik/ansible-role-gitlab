@@ -5,3 +5,18 @@
     src: /etc/gitlab/gitlab-secrets.json
     dest: /tmp
   become: true
+
+- name: fetch ssh keys from master
+  fetch:
+    src: /etc/ssh/{{ item }}
+    dest: /tmp
+  become: true
+  with_items:
+    - ssh_host_dsa_key
+    - ssh_host_dsa_key.pub
+    - ssh_host_ecdsa_key
+    - ssh_host_ecdsa_key.pub
+    - ssh_host_ed25519_key
+    - ssh_host_ed25519_key.pub
+    - ssh_host_rsa_key
+    - ssh_host_rsa_key.pub

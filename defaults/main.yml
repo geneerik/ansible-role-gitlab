@@ -112,6 +112,7 @@ gitlab_redis_sentinel_master_name: "mymaster"
 # Gitlab High Availability
 # Enable to configure high availability
 gitlab_high_availability: false
+gitlabha_role: "skip"
 
 # A network mounted mountpoint for the data directory needs to be set
 # gitlab_high_availability_mountpoint: '/var/opt/gitlab/git-data'

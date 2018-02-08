@@ -93,6 +93,10 @@ gitlab_rails['db_encoding'] = "unicode"
 gitlab_rails['db_database'] = '{{ gitlab_db_name }}'
 gitlab_rails['db_username'] = '{{ gitlab_db_username }}'
 gitlab_rails['db_password'] = '{{ gitlab_db_password }}'
+{% endif %}
+
+{% if gitlab_db_external and gitlab_db_localonly %}
+### Gitlab db is remote; default is use socket
 gitlab_rails['db_host'] = '{{ gitlab_db_hostname }}'
 gitlab_rails['db_port'] = {{ gitlab_db_port }}
 {% endif %}
